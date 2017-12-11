@@ -45,7 +45,6 @@ function json_response($message = null, $code = 200)
         ));
 }
 
-// Add Customer
 $app->post('/api/ephemeral_keys', function(Request $request, Response $response){
     $api_version = $request->getParam('api_version');
     $customer_id = $request->getParam('customer_id');
@@ -64,4 +63,35 @@ $app->post('/api/ephemeral_keys', function(Request $request, Response $response)
             echo(json_response($e, 500)); 
         }
     }
+});
+
+$app->post('/api/charge', function(Request $request, Response $response){
+    $source = $request->getParam('source');
+    $amount = $request->getParam('amount');
+    $customer_id = $request->getParam('customer_id');
+
+
+    // Create the charge on Stripe's servers - this will charge the user's card
+    try {
+        $charge = \Stripe\Charge::create(array(
+        "amount" => $amount,
+        "source" => $source,
+        "currency" => 'usd',
+        "customer" => $customer_id,
+        //"shipping" => $shipping,
+        "description" => 'Example Charge'
+        );
+
+        // Check that it was paid:
+        if ($charge->paid == true) {
+            $response = array( 'status'=> 'Success', 'message'=>'Payment has been charged!!' );
+        } else { // Charge was not paid!
+            $response = array( 'status'=> 'Failure', 'message'=>'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.' );
+        }
+        echo(json_response($response, 200)); // {"status":true,"message":"working"}
+
+    } catch(\Stripe\Error\Card $e) {
+        echo(json_response($e, 500)); // {"status":true,"message":"working"}
+    }
+
 });
