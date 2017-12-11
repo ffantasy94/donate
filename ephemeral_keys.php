@@ -15,6 +15,7 @@ try {
       array("customer" => $_POST['customer_id']),
       array("stripe_version" => $_POST['api_version'])
     );
+    header("HTTP/1.1 200 OK");
     header('Content-Type: application/json');
     echo(json_encode($key));
 } catch (Exception $e) {

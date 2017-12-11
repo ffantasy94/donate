@@ -28,6 +28,7 @@ try {
 	} else { // Charge was not paid!
 		$response = array( 'status'=> 'Failure', 'message'=>'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.' );
 	}
+	header("HTTP/1.1 200 OK");
 	header('Content-Type: application/json');
 	echo json_encode($response);
 
