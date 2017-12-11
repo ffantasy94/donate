@@ -34,7 +34,8 @@ function json_response($message = null, $code = 200)
 $source =  $_POST['source'];
 $amount = $_POST['amount'];
 $customer_id = $_POST['customer_id'];
-$shipping = $_POST['shipping'];
+//$shipping = $_POST['shipping'];
+
 
 // Create the charge on Stripe's servers - this will charge the user's card
 try {
@@ -43,7 +44,7 @@ try {
   	"source" => $source,
     "currency" => 'usd',
     "customer" => $customer_id,
-    "shipping" => $shipping,
+    //"shipping" => $shipping,
     "description" => 'Example Charge'
 	);
 
