@@ -69,6 +69,7 @@ $app->post('/api/charge', function(Request $request, Response $response){
     $source = $request->getParam('source');
     $amount = $request->getParam('amount');
     $customer_id = $request->getParam('customer_id');
+    $shipping = $request->getParam('shipping');
 
 
     // Create the charge on Stripe's servers - this will charge the user's card
@@ -78,7 +79,7 @@ $app->post('/api/charge', function(Request $request, Response $response){
             "source" => $source,
             "currency" => 'usd',
             "customer" => $customer_id,
-            //"shipping" => $shipping,
+            "shipping" => $shipping,
             "description" => 'Example Charge',
         ));
 
