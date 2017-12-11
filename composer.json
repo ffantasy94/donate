@@ -1,5 +1,6 @@
 {
-  "require": {
-    "stripe/stripe-php": "5.*"
-  }
+    "require": {
+        "slim/slim": "^3.0",
+        "stripe/stripe-php": "5.7.0"
+    }
 }

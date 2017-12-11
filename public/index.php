@@ -1,8 +1,9 @@
 <?php
-require_once('vendor/autoload.php');
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
 
-// Set your secret key: remember to change this to your live secret key in production
-// See your keys here https://dashboard.stripe.com/account/apikeys
+require '../vendor/autoload.php';
+
 \Stripe\Stripe::setApiKey(getenv('STRIPE_TEST_SECRET_KEY'));
 
 function json_response($message = null, $code = 200)
@@ -30,21 +31,26 @@ function json_response($message = null, $code = 200)
         ));
 }
 
-// This assumes that $customerId has been set appropriately from session data
-if (!isset($_POST['api_version']))
-{
-    exit(json_response('No API Version', 400)); // {"status":true,"message":"working"}
-}
+$app = new \Slim\App;
+$app->post('/ephemeral_keys', function (Request $request, Response $response) {
+    $api_version = $request->getParam('api_version');
+    $customer_id = $request->getParam('customer_id');
 
-try {
-    $key = \Stripe\EphemeralKey::create(
-      array("customer" => $_POST['customer_id']),
-      array("stripe_version" => $_POST['api_version'])
-    );
-	header('Content-Type: application/json');
-    exit(json_encode($key));
-} catch (Exception $e) {
-    exit(json_response($e, 500)); // {"status":true,"message":"working"}
-}
+	if (!isset($api_version)){
+	    exit(json_response('No API Version', 400)); // {"status":true,"message":"working"}
+	}
 
-?>
+	try {
+	    $key = \Stripe\EphemeralKey::create(
+	      array("customer" => $customer_id),
+	      array("stripe_version" => $api_version)
+	    );
+		header('Content-Type: application/json');
+	    exit(json_encode($key));
+	} catch (Exception $e) {
+	    exit(json_response($e, 500)); // {"status":true,"message":"working"}
+	}
+});
+
+
+$app->run();
