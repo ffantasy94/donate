@@ -36,6 +36,7 @@ $amount = $_POST['amount'];
 $customer_id = $_POST['customer_id'];
 //$shipping = $_POST['shipping'];
 
+exit(json_response($source, 200)); // {"status":true,"message":"working"}
 
 // Create the charge on Stripe's servers - this will charge the user's card
 try {
