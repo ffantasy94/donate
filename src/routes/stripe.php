@@ -74,13 +74,13 @@ $app->post('/api/charge', function(Request $request, Response $response){
     // Create the charge on Stripe's servers - this will charge the user's card
     try {
         $charge = \Stripe\Charge::create(array(
-        "amount" => $amount,
-        "source" => $source,
-        "currency" => 'usd',
-        "customer" => $customer_id,
-        //"shipping" => $shipping,
-        "description" => 'Example Charge'
-        );
+            "amount" => $amount,
+            "source" => $source,
+            "currency" => 'usd',
+            "customer" => $customer_id,
+            //"shipping" => $shipping,
+            "description" => 'Example Charge',
+        ));
 
         // Check that it was paid:
         if ($charge->paid == true) {
