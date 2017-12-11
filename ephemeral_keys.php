@@ -33,7 +33,7 @@ function json_response($message = null, $code = 200)
 // This assumes that $customerId has been set appropriately from session data
 if (!isset($_POST['api_version']))
 {
-    exit(json_response(400, 'error')); // {"status":true,"message":"working"}
+    exit(json_response('No API Version', 400)); // {"status":true,"message":"working"}
 }
 
 try {
@@ -41,9 +41,9 @@ try {
       array("customer" => $_POST['customer_id']),
       array("stripe_version" => $_POST['api_version'])
     );
-    exit(json_response(200, $key)); // {"status":true,"message":"working"}
+    exit(json_response($key, 200)); // {"status":true,"message":"working"}
 } catch (Exception $e) {
-    exit(json_response(500, 'error')); // {"status":true,"message":"working"}
+    exit(json_response($e, 500)); // {"status":true,"message":"working"}
 }
 
 ?>
