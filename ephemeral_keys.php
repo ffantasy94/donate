@@ -41,7 +41,8 @@ try {
       array("customer" => $_POST['customer_id']),
       array("stripe_version" => $_POST['api_version'])
     );
-    exit(json_response($key, 200)); // {"status":true,"message":"working"}
+	header('Content-Type: application/json');
+    exit(json_encode($key));
 } catch (Exception $e) {
     exit(json_response($e, 500)); // {"status":true,"message":"working"}
 }
