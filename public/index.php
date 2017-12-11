@@ -32,24 +32,30 @@ function json_response($message = null, $code = 200)
 }
 
 $app = new \Slim\App;
+
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write("Hello");
+    return $response;
+});
+
 $app->post('/ephemeral_keys', function (Request $request, Response $response) {
     $api_version = $request->getParam('api_version');
     $customer_id = $request->getParam('customer_id');
 
-	if (!isset($api_version)){
-	    exit(json_response('No API Version', 400)); // {"status":true,"message":"working"}
-	}
+    if (!isset($api_version)){
+        exit(json_response('No API Version', 400)); // {"status":true,"message":"working"}
+    }
 
-	try {
-	    $key = \Stripe\EphemeralKey::create(
-	      array("customer" => $customer_id),
-	      array("stripe_version" => $api_version)
-	    );
-		header('Content-Type: application/json');
-	    exit(json_encode($key));
-	} catch (Exception $e) {
-	    exit(json_response($e, 500)); // {"status":true,"message":"working"}
-	}
+    try {
+        $key = \Stripe\EphemeralKey::create(
+          array("customer" => $customer_id),
+          array("stripe_version" => $api_version)
+        );
+        header('Content-Type: application/json');
+        exit(json_encode($key));
+    } catch (Exception $e) {
+        exit(json_response($e, 500)); // {"status":true,"message":"working"}
+    }
 });
 
 
