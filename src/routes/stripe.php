@@ -100,6 +100,7 @@ $app->post('/api/charge', function(Request $request, Response $response){
 $app->post('/api/create_charge', function(Request $request, Response $response){
     $source = $request->getParam('source');
     $amount = $request->getParam('amount');
+    $description = $request->getParam('description');
 
     // Create the charge on Stripe's servers - this will charge the user's card
     try {
@@ -107,7 +108,7 @@ $app->post('/api/create_charge', function(Request $request, Response $response){
             "amount" => $amount,
             "source" => $source,
             "currency" => 'usd',
-            "description" => 'Example Charge',
+            "description" => $description,
         ));
 
         // Check that it was paid:
