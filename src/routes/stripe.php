@@ -96,3 +96,30 @@ $app->post('/api/charge', function(Request $request, Response $response){
     }
 
 });
+
+$app->post('/api/create_charge', function(Request $request, Response $response){
+    $source = $request->getParam('source');
+    $amount = $request->getParam('amount');
+
+    // Create the charge on Stripe's servers - this will charge the user's card
+    try {
+        $charge = \Stripe\Charge::create(array(
+            "amount" => $amount,
+            "source" => $source,
+            "currency" => 'usd',
+            "description" => 'Example Charge',
+        ));
+
+        // Check that it was paid:
+        if ($charge->paid == true) {
+            $response = array( 'status'=> 'Success', 'message'=>'Payment has been charged!!' );
+        } else { // Charge was not paid!
+            $response = array( 'status'=> 'Failure', 'message'=>'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.' );
+        }
+        echo(json_response($response, 200)); // {"status":true,"message":"working"}
+
+    } catch(\Stripe\Error\Card $e) {
+        echo(json_response($e, 500)); // {"status":true,"message":"working"}
+    }
+
+});
